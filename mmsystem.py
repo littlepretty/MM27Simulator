@@ -18,7 +18,7 @@ class MMSystem(object):
         self.num_srv = num_srv
         self.capacity = capacity
         self.srv_status = {}
-        for i in range(0, self.num_servers):
+        for i in range(0, self.num_srv):
             self.srv_status[i] = 'idle'
 
     def full(self):

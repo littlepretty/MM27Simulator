@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
 from mmevent import MMEvent
-from random_generator import MMGenerateArrivals, MMGenerateDepartures
+from random_generator import MMGenerate
 from mmsystem import MMSystem
+import time
+import numpy as np
 
 class MMSimulator(object):
     """Simulator for M/M/2/7 system"""
@@ -32,8 +34,8 @@ class MMSimulator(object):
         self.sort_event_list()
         for s_id in self.system.srv_status.keys():
             evt = self.last_departure_srv(s_id)
-            if earliest_ts == None or earliest_ts > evt.ts:
-                earliest_ts = evt.ts
+            if earliest_ts == None or earliest_ts > evt.time_stamp:
+                earliest_ts = evt.time_stamp
                 earliest_srv_id = s_id
         return (earliest_ts, earliest_srv_id)
 
@@ -54,12 +56,13 @@ class MMSimulator(object):
     def simulate_core(self, arrive_time_seq, depart_time_seq):
         """Discrete event simulation"""
         N = len(arrive_time_seq)
-        while self.system.pkt_served < N and self.should_continue():
+        while self.system.pkt_served + self.system.pkt_dropped < N and self.should_continue():
             # schedule/add a new pkt arrive event
-            new_arrival_ts = arrive_time_seq[self.pkt_seen]
-            new_arrive = MMEvent(self.pkt_seen, 'arrival', new_arrival_ts)
-            self.event_list.append(new_arrive)
-            self.pkt_seen += 1
+            if self.pkt_seen < N:
+                new_arrival_ts = arrive_time_seq[self.pkt_seen]
+                new_arrive = MMEvent(self.pkt_seen, 'arrival', new_arrival_ts)
+                self.event_list.append(new_arrive)
+                self.pkt_seen += 1
 
             # pop up the next event
             evt_x = self.next_event()
@@ -70,7 +73,10 @@ class MMSimulator(object):
                 # set the serving server to 'idle'
                 # increase @pkt_served counter
                 # calculate how long this pkt spend in @system
-                self.system.srv_status[evt_x.depart_srv] = 'idle'
+                if self.system.waiting == 0:
+                    self.system.srv_status[evt_x.depart_srv] = 'idle'
+                else:
+                    self.system.waiting -= 1
                 self.system.pkt_served += 1
                 evt_x.exit_time = self.clock
                 spend = evt_x.exit_time - evt_x.enter_time
@@ -100,6 +106,8 @@ class MMSimulator(object):
 
                     self.event_list.append(new_depart)
 
+        print [round(x, 2) for x in self.system.spending_time.values()]
+
 
 def main():
     ns = 2
@@ -107,8 +115,16 @@ def main():
     et = 100000
     mm27 = MMSystem(ns, nb)
     simulator = MMSimulator(mm27, et)
-    ats = MMGenerateArrivals()
-    dts = MMGenerateDepartures()
+    ats = MMGenerate(10, 0.5, int(time.time()))
+    dts = MMGenerate(10, 1, int(time.time()))
+    ats = np.cumsum(ats)
+    ats = [round(i, 2) for i in ats]
+    dts = [round(j, 2) for j in dts]
+    #print ats
+    #print dts
+    #time.sleep(10)
+    ats = [6.09, 6.65, 7.66, 8.41, 9.0]
+    dts = [7.32, 1.13, 2.0, 1.51, 1.17]
     simulator.simulate_core(ats, dts)
 
 if __name__ == '__main__':
