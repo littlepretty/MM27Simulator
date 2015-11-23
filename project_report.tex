@@ -11,6 +11,13 @@
 \usepackage[procnames]{listings}
 \usepackage{color}
 
+% ALGORITHM
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %    Page size commands.  Don't worry about these
@@ -66,6 +73,61 @@ The 90\% confidence interval for these properties are also given.
 % optional page break
 \newpage
 \section{Discrete Event Simulation}\label{sec:des}
+We designed and implemented our own simple simulator for M/M/2/2+5 queueing system. The simulation workflow is shown in Algorithm \ref{alg:simulator}.
+
+\begin{algorithm*}[t]
+\caption{Core of Discrete Event Simulation}
+\label{alg:simulator}
+\begin{algorithmic}[1]
+\Function{simulation\_core}{$arrive\_time\_seq$, $serve\_time\_seq$}
+\State{let $arrive\_time\_seq$ denote the arriving time of each packet}
+\State{let $serve\_time\_seq$ denote the service time of each packet}
+\State{let $N$ denote the number of total packets}
+\While{$pkt\_served + pkt\_dropped < N$}
+    \If{$pkt\_seen < N$}\Comment{Insert new arrival event to event list}
+        \State $ts \gets arrive\_time\_seq[pkt\_seen]$
+        \State{Create new arrival event $evt$ with time stamp $ts$ and id $pkt\_seen$}
+        \State{Insert $evt$ to $event\_list$}
+    \EndIf
+    \State{Sort $event\_list$ based on events' time stamp}
+    \State{Pop up the next event $evt_x$ we need to handle in $event\_list$}
+    \State{$clock \gets evt_x.time\_stamp$}
+    \If{$evt_x$ is departure event}
+        \If{queue buffer is empty}
+            \State{Set the status of the server $evt_x$ is leaving to $idle$}
+        \Else
+            \State{$--waiting$}
+        \EndIf
+        \State{$++pkt\_served$}
+        \State{$evt\_x.exit_time \gets clock$}
+        \State{$spending\_time \gets evt\_x.exit\_time - evt\_x.enter\_time$}
+        \State{Record the spending time of packet of event $evt_x$}
+    \EndIf
+    \If{$evt_x$ is arrival event}
+        \If{queue buffer is full}
+            \State{$++pkt\_dropped$}
+        \Else
+            \If{There is available server}
+                \State $id \gets evt_x.pkt\_id$
+                \State $ts \gets clock + serve\_time\_seq[id]$
+                \State{Choose an available server $s$}
+                \State{Mark $s$ as $busy$}
+            \Else
+            \State $(ts, s) \gets $\Call{schedule\_departure}{  }
+            \State $++waiting$
+            \EndIf
+            \State{Create new departure event $evt$ with time stamp $ts$}
+            \State{$evt.enter\_time \gets clock$}
+            \State{$evt.depart\_srv \gets s$}
+            \State{Insert $evt$ to $event\_list$}
+        \EndIf
+    \EndIf
+\EndWhile
+\EndFunction
+\end{algorithmic}
+\end{algorithm*}
+
+
 
 %\begin{center}
 %\begin{tabular}{|r|r|r|r|r|r|r|}        % 7 columns, each right-justified
@@ -112,7 +174,9 @@ From both figures we can say that the random generator generated random values o
         \label{fig:normal}
 \end{figure}
 
-
+To generate different random value sequences, we feed the random generator a seed, which is the integral value of system current time.
+That is the number of seconds since \textbf{Unix Epoch}.
+We generated two sequences of 1000000 numbers each and use \textbf{t-test} to test statistically are they significantly different from each other.
 
 
 \section{Eliminate Warm-up Period}
