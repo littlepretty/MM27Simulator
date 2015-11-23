@@ -74,7 +74,19 @@ The 90\% confidence interval for these properties are also given.
 \newpage
 \section{Discrete Event Simulation}\label{sec:des}
 We designed and implemented our own simple simulator for M/M/2/2+5 queueing system. The simulation workflow is shown in Algorithm \ref{alg:simulator}.
+The while loop will keep consume event in the $event\_list$ until we handled all the packets.
+Whenever there is unseen packets, we create an arrival event and insert it to the list.
+This list thus should be maintained in order with respect to events' time stamp, which is determined as soon as we create a \texttt{event} object.
+Also based on this time stamp, we will pop up the next event we should handle from the list according to the event type, either $arrival$ or $departure$.
 
+If the type is $departure$, we first check number of arrived but waiting packets in the system.
+When no packets need to be served at this moment, set the server this packet is leaving from to $idle$;
+otherwise, just decrease this $waiting$ counter.
+Anyway, we just served a packet.
+This means the counter for served packet should increase.
+We can also calculate the entire time this packet is in the system, from it entering until its exit, e.g. current clock.
+
+For $arrival$ event, 
 \begin{algorithm*}[t]
 \caption{Core of Discrete Event Simulation}
 \label{alg:simulator}
