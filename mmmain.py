@@ -13,8 +13,8 @@ def simulator_driver():
     num_srv = 2
     num_buffer = 5
     num_pkt_init = 0
-    end_time = 1000
-    pkt_seq_len = 10
+    end_time = 1000000
+    pkt_seq_len = 10000
 
     mm27 = MMSystem(num_srv, num_buffer)
 
@@ -33,9 +33,16 @@ def simulator_driver():
 
     simulator = MMSimulator(mm27, observe_interval, end_time)
     simulator.init_simulation(num_pkt_init)
+
+    t0 = time.time()
     simulator.simulate_core(ats, dts)
 
     reporter = MMReporter(mm27)
+
+    duration = time.time() - t0
+
+    print "The duration of this trial is %fs" %duration
+
     print "blocking probability", reporter.blocking_prob()
     print "mean time pkt spending in system", \
             reporter.mean_time_spending_in_system()
