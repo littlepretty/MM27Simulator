@@ -1,14 +1,17 @@
 #!/usr/bin/python
 
 class MMReporter(object):
+    """Calculate system measurements"""
     def __init__(self, system):
         super(MMReporter, self).__init__()
         self.system = system
 
     def blocking_prob(self):
+        """Blocking probability"""
         return float(self.system.pkt_dropped) / float(self.system.pkt_seen)
 
     def mean_time_spending_in_system(self):
+        """Mean time pkt spending in the system"""
         dur_sum = 0.0
         n = float(len(self.system.spending_time.values()))
         for dur in self.system.spending_time.values():
@@ -16,6 +19,7 @@ class MMReporter(object):
         return dur_sum / n
 
     def mean_num_pkt_in_system(self):
+        """Mean number of pkt in the system"""
         num_pkt_duration = {}
         entire_duration = 0.0
 

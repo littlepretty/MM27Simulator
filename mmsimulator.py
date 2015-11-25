@@ -1,21 +1,32 @@
 #!/usr/bin/python
 
 from mmevent import MMEvent
-from random_generator import MMGenerate
-from mmsystem import MMSystem
-from mmreporter import MMReporter
-import time
-import numpy as np
 
 class MMSimulator(object):
     """Simulator for M/M/2/7 system"""
     def __init__(self, system, obsrv_int, end_time):
         super(MMSimulator, self).__init__()
         self.system = system
-        self.init_event_list()
         self.obsrv_int = obsrv_int
         self.end_time = end_time
         self.clock = 0
+        self.initialized = False
+
+    def init_simulation(self, num_pkt_init):
+        """Initialize simulator before its core"""
+        self.init_system_status(num_pkt_init)
+        self.init_event_list()
+        self.initialized = True
+
+    def init_system_status(self, num_pkt_init):
+        """Set system initial status"""
+        self.system.log_time.append(0)
+        self.system.log_num_pkt_inside.append(num_pkt_init)
+        # initial number of pkt may large than system capacity
+        num_busy_srv = num_pkt_init - self.system.capacity
+        if num_busy_srv > 0 and num_busy_srv <= self.system.num_srv:
+            for i in range(0, num_busy_srv):
+                self.system.srv_status[i] = 'busy'
 
     def init_event_list(self):
         """Do necessary initialization"""
@@ -56,6 +67,9 @@ class MMSimulator(object):
 
     def simulate_core(self, arrive_time_seq, depart_time_seq):
         """Discrete event simulation"""
+        if not self.initialized:
+            print "Simulator is not explicitly initialized"
+
         N = len(arrive_time_seq)
         while self.system.pkt_served + self.system.pkt_dropped < N and self.should_continue():
             # schedule/add a new pkt arrive event
@@ -92,6 +106,10 @@ class MMSimulator(object):
                 if self.system.full():
                     # just drop pkt and increase counter
                     self.system.pkt_dropped += 1
+                    # no departure event for this pkt is created
+                    # but need to count its spending time
+                    evt_x.exit_time = evt_x.enter_time = 0
+                    self.dump_pkt_spending_time(evt_x)
                 else:
                     if self.system.available():
                         # put pkt into one available server
@@ -118,40 +136,4 @@ class MMSimulator(object):
                     new_depart.enter_time = self.clock
                     new_depart.depart_srv = new_depart_srv
                     self.event_list.append(new_depart)
-
-def simulator_driver():
-    num_srv = 2
-    num_buffer = 5
-    num_pkt_inside = 0
-    end_time = 1000
-    pkt_seq_len = 10
-
-    mm27 = MMSystem(num_srv, num_buffer, num_pkt_inside)
-
-    ats = MMGenerate(pkt_seq_len, 0.5, int(time.time())) # arrival interval
-    ats = np.cumsum(ats) # arrival time stamp
-
-    dts = MMGenerate(pkt_seq_len, 1, int(time.time())) # departure time stamp
-
-    ats = [round(i, 2) for i in ats]
-    dts = [round(j, 2) for j in dts]
-
-    observe_interval = 0.05
-    # ots = [observe_interval for _ in range(0, \
-            # int(end_time / observe_interval) + 1)]
-    # ots = np.cumsum(ots) # obverse time stamp
-
-    simulator = MMSimulator(mm27, observe_interval, end_time)
-    simulator.simulate_core(ats, dts)
-    reporter = MMReporter(mm27)
-    print reporter.blocking_prob()
-    print reporter.mean_time_spending_in_system()
-    print reporter.mean_num_pkt_in_system()
-
-def main():
-    simulator_driver()
-
-if __name__ == '__main__':
-    main()
-
 
