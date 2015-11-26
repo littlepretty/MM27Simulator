@@ -107,9 +107,9 @@ class MMSimulator(object):
                     # just drop pkt and increase counter
                     self.system.pkt_dropped += 1
                     # no departure event for this pkt is created
-                    # but need to count its spending time
+                    # but need to count its spending time/ not to count
                     evt_x.exit_time = evt_x.enter_time = 0
-                    self.system.dump_pkt_spending_time(evt_x)
+                    # self.system.dump_pkt_spending_time(evt_x)
                 else:
                     if self.system.available():
                         # put pkt into one available server

@@ -14,17 +14,17 @@ def simulator_driver():
     num_buffer = 5
     num_pkt_init = 0
     end_time = 1000000
-    pkt_seq_len = 10000
+    pkt_seq_len = 50000
 
     mm27 = MMSystem(num_srv, num_buffer)
 
-    ats = MMGenerate(pkt_seq_len, 0.5, int(time.time()))    # arrival interval
+    ats = MMGenerate(pkt_seq_len, 0.1, int(time.time()))    # arrival interval
     ats = np.cumsum(ats)                                    # arrival time stamp
 
     dts = MMGenerate(pkt_seq_len, 1, int(time.time()))      # departure time stamp
 
-    ats = [round(i, 2) for i in ats]
-    dts = [round(j, 2) for j in dts]
+    # ats = [round(i, 2) for i in ats]
+    # dts = [round(j, 2) for j in dts]
 
     observe_interval = 0.05
     # ots = [observe_interval for _ in range(0, \

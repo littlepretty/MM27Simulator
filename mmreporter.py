@@ -14,6 +14,7 @@ class MMReporter(object):
         """Mean time pkt spending in the system"""
         dur_sum = 0.0
         n = float(len(self.system.spending_time.values()))
+
         for dur in self.system.spending_time.values():
             dur_sum += dur
         return dur_sum / n

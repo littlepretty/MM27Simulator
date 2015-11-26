@@ -64,7 +64,11 @@ class MMSystem(object):
     def dump_num_pkt_inside(self, time):
         """Update pkt inside system and log it with current time stamp"""
         self.log_time.append(time)
-        num_pkt_inside = self.pkt_waiting + self.num_available_servers()
+        if self.pkt_waiting > 0:
+            num_pkt_inside = self.pkt_waiting + 2
+        else:
+            num_pkt_inside = 2 - self.num_available_servers()
+
         self.log_num_pkt_inside.append(num_pkt_inside)
 
     def dump_pkt_spending_time(self, evt):
