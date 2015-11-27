@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import bisect
+
 class MMReporter(object):
     """Calculate system measurements"""
     def __init__(self, system):
@@ -39,4 +41,15 @@ class MMReporter(object):
             product_sum += num_pkt * dur
         return product_sum / entire_duration
 
+    def warm_up_finding(self, interval_sequence):
+
+        #print interval_sequence
+        output = []
+
+        for i in interval_sequence:
+            index = bisect.bisect_left(self.system.log_time, i)
+            index = index - 1
+            output.append(self.system.log_num_pkt_inside[index])
+
+        return output
 
