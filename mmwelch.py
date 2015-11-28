@@ -3,6 +3,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import math
+import subprocess
 
 class MMWelch(object):
     """Welch graphic method to eliminate warm-up period"""
@@ -28,12 +29,16 @@ class MMWelch(object):
 
     def plot_avg_run(self):
         y_max = math.ceil(max(self.avg_run))
+        figure_name = 'Lambda%dAvg%dRuns.eps' %(self.l, self.num_replicas)
 
         plt.figure()
         plt.plot(self.time_seq, self.avg_run)
-        plt.xticks(np.arange(0, self.time_seq[-1], 10))
+        plt.xticks(np.arange(0, self.time_seq[-1], 25))
         plt.yticks(np.arange(0, y_max, 0.2))
+        plt.xlim(self.time_seq[0], self.time_seq[-1])
+        plt.ylim(0, y_max)
         plt.grid()
-        plt.savefig('Lambda%dAvg%dRuns.eps' % (self.l, self.num_replicas), \
-                    format='eps')
+        plt.savefig(figure_name, format='eps')
+
+        subprocess.call('open %s' % figure_name)
 
