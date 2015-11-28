@@ -4,10 +4,9 @@ from mmevent import MMEvent
 
 class MMSimulator(object):
     """Simulator for M/M/2/7 system"""
-    def __init__(self, system, obsrv_int, end_time):
+    def __init__(self, system, end_time):
         super(MMSimulator, self).__init__()
         self.system = system
-        self.obsrv_int = obsrv_int
         self.end_time = end_time
         self.clock = 0
         self.initialized = False
@@ -65,7 +64,8 @@ class MMSimulator(object):
         """Test if @clock exceed predefined @end_time"""
         return self.clock < self.end_time
 
-    def simulate_core(self, arrive_time_seq, depart_time_seq_server1, depart_time_seq_server2):
+    def simulate_core(self, arrive_time_seq, \
+                      depart_time_seq_server1, depart_time_seq_server2):
         """Discrete event simulation"""
         if not self.initialized:
             print "Simulator is not explicitly initialized"
@@ -73,7 +73,8 @@ class MMSimulator(object):
         N = len(arrive_time_seq)
         flag_server1 = 0
         flag_server2 = 0
-        while self.system.pkt_served + self.system.pkt_dropped < N and self.should_continue():
+        while self.system.pkt_served + self.system.pkt_dropped < N \
+                and self.should_continue():
             # schedule/add a new pkt arrive event
             if self.system.pkt_seen < N:
                 new_arrival_ts = arrive_time_seq[self.system.pkt_seen]
@@ -118,7 +119,6 @@ class MMSimulator(object):
                         # calculate when it should exit the server
                         # mark this server as 'busy'
                         new_depart_srv = self.system.available_server()
-
                         if new_depart_srv == 0:
                             new_depart_ts = self.clock + \
                                         depart_time_seq_server1[flag_server1]
@@ -132,13 +132,10 @@ class MMSimulator(object):
                     else:
                         # find the server pkt should go
                         earliest_ts, earliest_srv = self.schedule_departure()
-
                         if earliest_srv == 0:
-
                             new_depart_ts = earliest_ts + \
                                         depart_time_seq_server1[flag_server1]
                             flag_server1 += 1
-
                         else:
                             new_depart_ts = self.clock + \
                                         depart_time_seq_server2[flag_server2]
@@ -157,4 +154,3 @@ class MMSimulator(object):
                     new_depart.depart_srv = new_depart_srv
                     self.event_list.append(new_depart)
 
-        print "last event time stamp: ", self.clock
