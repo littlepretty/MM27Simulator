@@ -6,11 +6,12 @@ import math
 
 class MMWelch(object):
     """Welch graphic method to eliminate warm-up period"""
-    def __init__(self, num_replicas, interval, run_length):
+    def __init__(self, num_replicas, interval, run_length, l):
         super(MMWelch, self).__init__()
         self.num_replicas = num_replicas
         self.run_length = run_length
         self.interval = interval
+        self.l = l
         self.avg_run = [0] * self.run_length
         self.time_seq = [self.interval * i for i in range(0, self.run_length)]
 
@@ -33,5 +34,6 @@ class MMWelch(object):
         plt.xticks(np.arange(0, self.time_seq[-1], 10))
         plt.yticks(np.arange(0, y_max, 0.2))
         plt.grid()
-        plt.savefig('avg_%d_runs.eps' % self.num_replicas, format='eps')
+        plt.savefig('Lambda%dAvg%dRuns.eps' % (self.l, self.num_replicas), \
+                    format='eps')
 

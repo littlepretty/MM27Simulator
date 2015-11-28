@@ -13,7 +13,7 @@ def roundup_hundreds(num):
     """To round up ending time of the simulation"""
     return int(math.ceil(num / 100)) * 100
 
-def simulator_driver(pkt_seq_len, trial, l, u):
+def simulator_driver(pkt_seq_len, trial, l, u, obsrv_int):
     """Reuse this function to get n replication of simulation"""
     # ending time is dependent with arriving rate.
     end_time = 1000
@@ -60,25 +60,27 @@ def simulator_driver(pkt_seq_len, trial, l, u):
 
     return len(observations)
 
-def main():
+def main(l):
     num_obsrv = 999999
+    obsrv_int = 1.0 / l / 10
     for i in range(trial):
-        new_obsrv = simulator_driver(num_pkt, i, l, u)
+        new_obsrv = simulator_driver(num_pkt, i, l, u, obsrv_int)
         num_obsrv = min(num_obsrv, new_obsrv)
-    welch = MMWelch(trial, obsrv_int, num_obsrv)
+    welch = MMWelch(trial, obsrv_int, num_obsrv, l)
     welch.average_all_runs()
     welch.plot_avg_run()
 
 if __name__ == '__main__':
     num_srv = 2
     num_buffer = 5
-    l = 10
+    lambdaA = 2
+    lambdaB = 10
     u = 1
     num_pkt_init = 0
-    obsrv_int = 0.01
     trial = 1000
-    num_pkt = 1000
+    num_pkt = 500
+    main(lambdaA)
+    # main(lambdaB)
 
-    main()
 
 
