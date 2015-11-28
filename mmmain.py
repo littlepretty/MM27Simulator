@@ -79,11 +79,13 @@ if __name__ == '__main__':
     lambdaB = 10.0
     u = 1.0
     num_pkt_init = 0
-    trial = 1000
+    trial = 3000
     pkt_seq_len = 500
+    
     seed = int(time.time())
     main(lambdaA)
-    # main(lambdaB)
+    seed = int(time.time())
+    main(lambdaB)
 
 
 
