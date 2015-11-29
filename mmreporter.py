@@ -44,8 +44,7 @@ class MMReporter(object):
         return product_sum / entire_duration
 
     def warm_up_finding(self, interval_sequence):
-
-        #print interval_sequence
+        """Find #pkt for all moment in interval sequence"""
         output = []
 
         for i in interval_sequence:

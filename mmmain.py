@@ -41,33 +41,34 @@ def simulator_driver(trial, l, u, obsrv_int):
     end_time = int(math.ceil(simulator.clock))
     ots = [obsrv_int for _ in range(0, int(end_time / obsrv_int) + 1)]
     ots = np.cumsum(ots) # obverse time stamp
-    file_name = str(trial) + ".txt"
-    observations = reporter.warm_up_finding(ots)
-    np.savetxt(file_name, observations, fmt='%i', delimiter= ',')
 
-    print "The running time of this trial is %fs" % duration
-    print "*******************************************************"
-    print "***************** Simulation results ******************"
-    print "*******************************************************"
-    print "Ending event time stamp: ", end_time
-    print "Blocking probability", reporter.blocking_prob()
-    print "Mean time pkts spending in system", \
-        reporter.mean_time_spending_in_system()
-    print "Mean number of pkts in system", reporter.mean_num_pkt_in_system()
-    print "********************************************************\n"
+    file_name = str(trial) + ".txt"
+    output_file = open(file_name, 'w+')
+    observations = reporter.warm_up_finding(ots)
+    output_file.write("########################################################\n")
+    output_file.write("################## Simulation results ##################\n")
+    output_file.write("########################################################\n")
+    output_file.write("#Running time of NO.%d trial %.4fs\n" % (trial, duration))
+    output_file.write("#Ending event time stamp %.4f\n" % end_time)
+    output_file.write("#Blocking probability %.4f\n" % reporter.blocking_prob())
+    output_file.write("#Mean time spent in system %.4f\n" % reporter.mean_time_spending_in_system())
+    output_file.write("#Mean #pkt in system %.4f\n" % reporter.mean_num_pkt_in_system())
+    output_file.write("########################################################\n")
+    np.savetxt(file_name, observations, fmt='%i', delimiter= ',')
 
     return len(observations)
 
 def main(l):
     global seed, pkt_seq_len, trail
-    num_obsrv = 999999
-    obsrv_int = 1.0 / l / 10
+    num_obsrv = 99999
+    obsrv_int = min(0.01, 1.0 / l / 10)
     for i in range(trial):
         new_obsrv = simulator_driver(i, l, u, obsrv_int)
         num_obsrv = min(num_obsrv, new_obsrv)
         seed += 10
     welch = MMWelch(trial, obsrv_int, num_obsrv, l)
     welch.average_all_runs()
+    # welch = MMWelch(trial, obsrv_int, num_obsrv, l, 'offline')
     welch.plot_avg_run()
 
 if __name__ == '__main__':
@@ -77,13 +78,11 @@ if __name__ == '__main__':
     lambdaB = 10.0
     u = 1.0
     num_pkt_init = 0
-    trial = 1
-    pkt_seq_len = 5000
+    trial = 5000
+    pkt_seq_len = 1000
 
-    # seed = int(time.time())
-    # main(lambdaA)
     seed = int(time.time())
-    main(lambdaB)
-
-
+    main(lambdaA)
+    # seed = int(time.time())
+    # main(lambdaB)
 
