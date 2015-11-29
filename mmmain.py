@@ -85,6 +85,6 @@ if __name__ == '__main__':
 
     seed = int(time.time())
     main(lambdaA)
-    # seed = int(time.time())
-    # main(lambdaB)
+    seed = int(time.time())
+    main(lambdaB)
 

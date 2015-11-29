@@ -41,10 +41,14 @@ class MMWelch(object):
         """Draw a figure, output to file"""
         if self.mode == 'offline':
             self.avg_run = np.loadtxt('avg_run.txt')
+            self.run_length = len(self.avg_run)
+            self.time_seq = [self.interval * i for i in range(0, self.run_length)]
+
         y_max = math.ceil(max(self.avg_run)) + 0.5
         x_max = math.ceil(self.time_seq[-1] / 10) * 10
         figure_name = 'Lambda%dAvg%dRuns.eps' % (self.l, self.num_replicas)
-
+        
+        print len(self.time_seq), len(self.avg_run)
         plt.figure()
         plt.plot(self.time_seq, self.avg_run)
         plt.xlabel('Wall clock time / second')
