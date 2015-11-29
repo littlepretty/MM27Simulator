@@ -21,6 +21,7 @@ class MMWelch(object):
         self.interval = float(interval)
         self.l = float(l)
         self.time_seq = [self.interval * i for i in range(0, self.run_length)]
+        print "Use min length %d as common length " % self.run_length
         self.mode = mode
         if self.mode == 'online':
             self.avg_run = [0] * self.run_length
@@ -29,8 +30,7 @@ class MMWelch(object):
         """Average all replica runs, store in self.avg_run"""
         for i in range(0, int(self.num_replicas)):
             # truncate only the common part of each runs
-            replica = np.loadtxt('%d.txt' % i, dtype=int)
-            # print "run length = ", len(replica)
+            replica = np.loadtxt('%d.txt' % i, dtype=int, comments='#')
             replica = replica[:self.run_length]
             self.avg_run = np.add(replica, self.avg_run)
         # average and save
@@ -47,6 +47,8 @@ class MMWelch(object):
 
         plt.figure()
         plt.plot(self.time_seq, self.avg_run)
+        plt.xlabel('Wall clock time / second')
+        plt.ylabel('Number packet in system')
         plt.xticks(np.arange(0, x_max, x_max / 10.0))
         plt.yticks(np.arange(0, y_max, y_max / 10.0))
         plt.xlim(self.time_seq[0], self.time_seq[-1])

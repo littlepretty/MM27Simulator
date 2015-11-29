@@ -45,22 +45,24 @@ def simulator_driver(trial, l, u, obsrv_int):
     file_name = str(trial) + ".txt"
     output_file = open(file_name, 'w+')
     observations = reporter.warm_up_finding(ots)
-    output_file.write("########################################################\n")
-    output_file.write("################## Simulation results ##################\n")
-    output_file.write("########################################################\n")
-    output_file.write("#Running time of NO.%d trial %.4fs\n" % (trial, duration))
-    output_file.write("#Ending event time stamp %.4f\n" % end_time)
-    output_file.write("#Blocking probability %.4f\n" % reporter.blocking_prob())
-    output_file.write("#Mean time spent in system %.4f\n" % reporter.mean_time_spending_in_system())
-    output_file.write("#Mean #pkt in system %.4f\n" % reporter.mean_num_pkt_in_system())
-    output_file.write("########################################################\n")
-    np.savetxt(file_name, observations, fmt='%i', delimiter= ',')
 
+    optional_output = '' 
+    optional_output += "########################################################\n"
+    optional_output += "################## Simulation results ##################\n"
+    optional_output += "########################################################\n"
+    optional_output += "#Running time of NO.%d trial %.4fs\n" % (trial, duration)
+    optional_output += "#Ending event time stamp %.4f\n" % end_time
+    optional_output += "#Blocking probability %.4f\n" % reporter.blocking_prob()
+    optional_output += "#Mean time spent in system %.4f\n" % reporter.mean_time_spending_in_system()
+    optional_output += "#Mean #pkt in system %.4f\n" % reporter.mean_num_pkt_in_system()
+    optional_output += "########################################################\n"
+    np.savetxt(file_name, observations, fmt='%i', header=optional_output, comments='#')    
+ 
     return len(observations)
 
 def main(l):
     global seed, pkt_seq_len, trail
-    num_obsrv = 99999
+    num_obsrv = 999999
     obsrv_int = min(0.01, 1.0 / l / 10)
     for i in range(trial):
         new_obsrv = simulator_driver(i, l, u, obsrv_int)
@@ -78,8 +80,8 @@ if __name__ == '__main__':
     lambdaB = 10.0
     u = 1.0
     num_pkt_init = 0
-    trial = 5000
-    pkt_seq_len = 1000
+    trial = 5
+    pkt_seq_len = 5 
 
     seed = int(time.time())
     main(lambdaA)
