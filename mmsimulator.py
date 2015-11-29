@@ -131,7 +131,7 @@ class MMSimulator(object):
                             new_depart_ts = earliest_ts + depart_time_seq_server1[flag_server1]
                             flag_server1 += 1
                         else:
-                            new_depart_ts = self.clock + depart_time_seq_server2[flag_server2]
+                            new_depart_ts = earliest_ts + depart_time_seq_server2[flag_server2]
                             flag_server2 += 1
 
                         new_depart_srv = earliest_srv
