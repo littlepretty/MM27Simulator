@@ -28,8 +28,6 @@ def simulator_driver(trial, l, u, obsrv_int):
     # departure time stamp
     dts_server1 = MMGenerate(pkt_seq_len, u, seed + 1)
     dts_server2 = MMGenerate(pkt_seq_len, u, seed + 2)
-    # ats = [round(i, 2) for i in ats]
-    # dts = [round(j, 2) for j in dts]
 
     simulator = MMSimulator(mm27, end_time)
     simulator.init_simulation(num_pkt_init)
@@ -79,11 +77,11 @@ if __name__ == '__main__':
     lambdaB = 10.0
     u = 1.0
     num_pkt_init = 0
-    trial = 3000
-    pkt_seq_len = 500
-    
-    seed = int(time.time())
-    main(lambdaA)
+    trial = 1
+    pkt_seq_len = 5000
+
+    # seed = int(time.time())
+    # main(lambdaA)
     seed = int(time.time())
     main(lambdaB)
 
