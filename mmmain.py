@@ -46,7 +46,7 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
     ots = np.cumsum(ots) # obverse time stamp
 
     # output results to this file
-    file_name = prefix + 'Runs%d.txt' % trial
+    file_name = prefix + 'Run%d.txt' % trial
     # align results to observation intervals
     observations = reporter.warm_up_finding(ots)
     # output statistic results as header

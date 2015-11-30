@@ -30,7 +30,8 @@ class MMWelch(object):
         """Average all replica runs, store in self.avg_run"""
         for i in range(0, int(self.num_replicas)):
             # truncate only the common part of each runs
-            replica = np.loadtxt('%sRuns%d.txt' % (self.prefix, i), dtype=int, comments='#')
+            load_file_name = '%sRun%d.txt' % (self.prefix, i)
+            replica = np.loadtxt(load_file_name, dtype=int, comments='#')
             replica = replica[:self.run_length]
             self.avg_run = np.add(replica, self.avg_run)
         # average and save
