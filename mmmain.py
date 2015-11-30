@@ -70,13 +70,14 @@ def eliminate_warmup_period(l, u, num_pkt_init, seed):
     num_pkts = 1000
     obsrv_int = min(0.01, 1.0 / l / 10)
     prefix = 'Lmda%dInit%d' % (l, num_pkt_init)
-    for i in range(num_trials):
-        new_obsrv = simulator_driver(i, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefix)
-        num_obsrv = min(num_obsrv, new_obsrv)
-        seed += 10
-    welch = MMWelch(num_trials, obsrv_int, num_obsrv, prefix)
-    welch.average_all_runs()
-    # welch = MMWelch(trial, obsrv_int, num_obsrv, l, 'offline')
+    # for i in range(num_trials):
+        # new_obsrv = simulator_driver(i, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefix)
+        # num_obsrv = min(num_obsrv, new_obsrv)
+        # seed += 10
+    # welch = MMWelch(num_trials, obsrv_int, num_obsrv, prefix)
+    # welch.average_all_runs()
+    # Draw figure in offline mode
+    welch = MMWelch(num_trials, obsrv_int, num_obsrv, prefix, 'offline')
     welch.plot_avg_run()
 
 def run_system(l, u, num_pkt_init):

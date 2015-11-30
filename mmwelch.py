@@ -17,14 +17,23 @@ class MMWelch(object):
         """
         super(MMWelch, self).__init__()
         self.num_replicas = float(num_replicas)
-        self.run_length = run_length
-        self.interval = float(interval)
-        self.time_seq = [self.interval * i for i in range(0, self.run_length)]
-        print "Use min length %d as common length " % self.run_length
         self.prefix = prefix
         self.mode = mode
+        self.interval = float(interval)
+        
         if self.mode == 'online':
+            self.run_length = run_length
+            self.time_seq = [self.interval * i for i in range(0, self.run_length)]
             self.avg_run = [0] * self.run_length
+        if self.mode == 'offline':
+            load_file_name = self.prefix + 'Avg%d.txt' % self.num_replicas
+            self.avg_run = np.loadtxt(load_file_name)
+            warmup_period = len(self.avg_run) / 8
+            self.avg_run = self.avg_run[:warmup_period]
+            self.run_length = len(self.avg_run)
+            self.time_seq = [self.interval * i for i in range(0, self.run_length)]
+            self.prefix += 'Ofl'
+        print "Use %d as common length " % self.run_length
 
     def average_all_runs(self):
         """Average all replica runs, store in self.avg_run"""
@@ -41,11 +50,6 @@ class MMWelch(object):
 
     def plot_avg_run(self):
         """Draw a figure, output to file"""
-        if self.mode == 'offline':
-            self.avg_run = np.loadtxt('%sAvg%d.txt' % (self.prefix, self.num_replicas))
-            self.run_length = len(self.avg_run)
-            self.time_seq = [self.interval * i for i in range(0, self.run_length)]
-
         y_max = math.ceil(max(self.avg_run)) + 0.5
         x_max = math.ceil(self.time_seq[-1] / 10) * 10
 
