@@ -66,8 +66,8 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
 
 def eliminate_warmup_period(l, u, num_pkt_init, seed):
     num_obsrv = 999999
-    num_trials = 10
-    num_pkts = 100
+    num_trials = 5000
+    num_pkts = 1000
     obsrv_int = min(0.01, 1.0 / l / 10)
     prefix = 'Lmda%dInit%d' % (l, num_pkt_init)
     for i in range(num_trials):
