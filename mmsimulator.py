@@ -22,10 +22,10 @@ class MMSimulator(object):
         self.system.log_time.append(0)
         self.system.log_num_pkt_inside.append(num_pkt_init)
         # initial number of pkt may large than system capacity
-        num_busy_srv = num_pkt_init - self.system.capacity
-        if num_busy_srv > 0 and num_busy_srv <= self.system.num_srv:
-            for i in range(0, num_busy_srv):
-                self.system.srv_status[i] = 'busy'
+        # num_busy_srv = num_pkt_init - self.system.capacity
+        # if num_busy_srv > 0 and num_busy_srv <= self.system.num_srv:
+            # for i in range(0, num_busy_srv):
+                # self.system.srv_status[i] = 'busy'
 
     def init_event_list(self):
         """Do necessary initialization"""
@@ -59,9 +59,9 @@ class MMSimulator(object):
         self.sort_event_list()
         return self.event_list.pop(0)
 
-    def should_continue(self):
-        """Test if @clock exceed predefined @end_time"""
-        return self.clock < self.end_time
+    def should_continue(self, N):
+        """Test if seen all pkt and clock NOT exceed predefined end time"""
+        return self.system.pkt_served + self.system.pkt_dropped < N and self.clock < self.end_time
 
     def simulate_core(self, arrive_time_seq, depart_time_seq_server1, depart_time_seq_server2):
         """Discrete event simulation"""
@@ -72,8 +72,8 @@ class MMSimulator(object):
         flag_server1 = 0
         flag_server2 = 0
 
-        while self.system.pkt_served + self.system.pkt_dropped < N and self.should_continue():
-            # schedule/add a new pkt arrive event
+        while self.should_continue(N):
+            # schedule/add a new pkt arrive event if still pkt unseen
             if self.system.pkt_seen < N:
                 new_arrival_ts = arrive_time_seq[self.system.pkt_seen]
                 new_arrive = MMEvent(self.system.pkt_seen, 'arrival', new_arrival_ts)
