@@ -6,6 +6,7 @@
 % graphicx package enables you to paste in graphics
 \usepackage{graphicx}
 \usepackage{auto-pst-pdf}
+\usepackage{subfig}
 
 % embed source inside latex
 \usepackage[procnames]{listings}
@@ -99,8 +100,8 @@ The time stamp of this newly created $departure$ event can be calculated by incr
 
 When all servers are busy, we need to calculate the server who will serve the packet in the future and the time stamp at the end of the service differently.
 Algorithm \ref{alg:schedule} shown the critical part of this task: find a server that will be available first.
-Then the newly created departure event should be served from this $earlier\_time\_stamp$ and on this first available server.
-Therefore its time stamp should be this this returned time stamp plus the duration it will be served in the server.
+Then this arrived packet should be served at this $earlier\_time\_stamp$ time point and on this first available server.
+Therefore its departure time stamp should be this returned time stamp plus the duration it will be served in the server.
 
 
 \begin{algorithm*}[t]
@@ -127,8 +128,8 @@ Therefore its time stamp should be this this returned time stamp plus the durati
             \State{$--waiting$}
         \EndIf
         \State{$++pkt\_served$}
-        \State{$evt\_x.exit_time \gets clock$}
-        \State{$spending\_time \gets evt\_x.exit\_time - evt\_x.enter\_time$}
+        \State{$evt_x.exit\_time \gets clock$}
+        \State{$spending\_time \gets evt_x.exit\_time - evt_x.enter\_time$}
         \State{Record the spending time of packet of event $evt_x$}
     \EndIf
     \If{$evt_x$ is arrival event}
@@ -137,12 +138,13 @@ Therefore its time stamp should be this this returned time stamp plus the durati
         \Else
             \If{There is available server}
                 \State $id \gets evt_x.pkt\_id$
-                \State $ts \gets clock + serve\_time\_seq[id]$
+                \State $ts \gets clock + $ exponential service time
                 \State{Choose an available server $s$}
                 \State{Mark $s$ as $busy$}
             \Else
-            \State $(ts, s) \gets $\Call{schedule\_departure}{  }
-            \State $++waiting$
+                \State $(ts, s) \gets $\Call{schedule\_departure}{  }
+                \State $ts \gets ts + $ exponential service time
+                \State $++waiting$
             \EndIf
             \State{Create new departure event $evt$ with time stamp $ts$}
             \State{$evt.enter\_time \gets clock$}
@@ -222,6 +224,79 @@ We generated two sequences of 1000000 numbers each and use \textbf{t-test} to te
 
 
 \section{Eliminate Warm-up Period}
+Using Algorithm \ref{alg:simulator} as core, we run 5000 simulations for system A and system B under different initial states respectively.
+For each simulation run, we inject 1000 packets into the system; the simulation terminates when these 1000 packets are all handled.
+We choose to observe number of packets in the system during simulation.
+Every time this system variable changes, we record its value and the happenning time moment.
+After simulation, we process this log as follows.
+First we create a observation time sequence with interval 1 magnitude less than arrival rate and ends at the finishing moment of the last departure event.
+This ensure that we will not lost any accuracy.
+For example, for system B where $\lambda=10$, the observation interval is 0.01.
+Then based on the simulation log, we calculate the value of number of packet at every observation time point.
+In this way we get the output for one simulation run.
+
+We process all simulation logs and then can obtain 5000 simulation outputs.
+Since simulation ends at different time, we only keep $m$ observations where $m = MIN$(length of all outputs).
+Based on Welch graphical procedure, we average 5000 simulation outputs, observation by observation.
+There are totally 4 cases to investigate: system A with 0 initial packets, system A with 7 initial packets, system B with 0 initial packets, system B with 4 initial packets.
+All systems' Welch processing results are plotted in Figure \ref{fig:systemAinit0all}, Figure \ref{fig:systemAinit7all}, Figure \ref{fig:systemBinit0all} and Figure \ref{fig:systemBinit4all} respectively.
+
+\begin{figure*}
+\centering
+\subfloat[\textbf{System A with 0 Initial Packets}]{
+        \includegraphics[scale=0.4]{Lmda2Init0Avg5000.eps}
+        \label{fig:systemAinit0all}
+}
+\hfill
+\subfloat[\textbf{System A  with 7 Initial Packets}]{
+        \includegraphics[scale=0.4]{Lmda2Init7Avg5000.eps}
+        \label{fig:systemAinit7all}
+}
+\\
+\subfloat[\textbf{System B with 0 Initial Packets}]
+{
+        \includegraphics[scale=0.4]{Lmda10Init0Avg5000.eps}
+        \label{fig:systemBinit0all}
+}
+\hfill
+\subfloat[\textbf{System B with 4 Initial Packets}]
+{
+        \includegraphics[scale=0.4]{Lmda10Init4Avg5000.eps}
+        \label{fig:systemBinit4all}
+}
+\caption{\textbf{Average 5000 Simulation Runs}}
+\end{figure*}
+
+Since the nonstationary states only take up a very smal fraction of the entire output, we further zoom out the them in Figure \ref{fig:systemAinit0warmup}, Figure \ref{fig:systemAinit7warmup}, Figure \ref{fig:systemBinit0warmup} and Figure \ref{fig:systemBinit4warmup}.
+
+
+
+\begin{figure*}
+\centering
+\subfloat[\textbf{System A with 0 Initial Packets}]{
+        \includegraphics[scale=0.4]{Lmda2Init0OflAvg5000.eps}
+        \label{fig:systemAinit0warmup}
+}
+\hfill
+\subfloat[\textbf{System A  with 7 Initial Packets}]{
+        \includegraphics[scale=0.4]{Lmda2Init7OflAvg5000.eps}
+        \label{fig:systemAinit7warmup}
+}
+\\
+\subfloat[\textbf{System B with 0 Initial Packets}]
+{
+        \includegraphics[scale=0.4]{Lmda10Init0OflAvg5000.eps}
+        \label{fig:systemBinit0warmup}
+}
+\hfill
+\subfloat[\textbf{System B with 4 Initial Packets}]
+{
+        \includegraphics[scale=0.4]{Lmda10Init4OflAvg5000.eps}
+        \label{fig:systemBinit4warmup}
+}
+\caption{\textbf{Zoom out Nonstationary States}}
+\end{figure*}
+
 
 
 
