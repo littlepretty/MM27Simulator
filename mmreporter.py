@@ -4,13 +4,24 @@ import bisect
 
 class MMReporter(object):
     """Calculate system measurements"""
-    def __init__(self, system):
+    def __init__(self, system, ats):
         super(MMReporter, self).__init__()
         self.system = system
+        self.ats = ats
 
     def blocking_prob(self):
         """Blocking probability"""
-        return float(self.system.pkt_dropped) / float(self.system.pkt_seen)
+        num_dropped = 0
+        num_seen = 0
+
+        for i in range(self.system.pkt_seen):
+            if self.ats[i] > (self.system.log_time[-1] / 3.0):
+                if i in self.system.pkt_dropped_id:
+                    num_dropped += 1
+                num_seen += 1
+
+        return num_dropped/float(num_seen)
+        #return float(self.system.pkt_dropped) / float(self.system.pkt_seen)
 
     def mean_time_spending_in_system(self):
         """Mean time pkt spending in the system"""

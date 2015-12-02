@@ -79,6 +79,8 @@ class MMSimulator(object):
                 new_arrive = MMEvent(self.system.pkt_seen, 'arrival', new_arrival_ts)
                 self.event_list.append(new_arrive)
                 self.system.pkt_seen += 1
+                # if self.clock > float(self.end_time/3):
+                #     self.system.pkt_seen_after_warm_up += 1
 
             # pop up the next event
             evt_x = self.next_event()
@@ -106,6 +108,10 @@ class MMSimulator(object):
                 if self.system.full():
                     # just drop pkt and increase counter
                     self.system.pkt_dropped += 1
+                    self.system.pkt_dropped_id.append(evt_x.pkt_id)
+                    # if self.clock > float(self.end_time/3):
+                    #     self.system.pkt_dropped_after_warm_up += 1
+
                     # no departure event for this pkt is created
                     # but need to count its spending time/ not to count
                     evt_x.exit_time = evt_x.enter_time = 0

@@ -24,6 +24,7 @@ class MMSystem(object):
 
         # couters
         self.pkt_dropped = 0    # dropped due to buffer full
+        self.pkt_dropped_id = []
         self.pkt_seen = 0       # total arrived pkt
         self.pkt_waiting = 0    # pkt in buffer
         self.pkt_served = 0     # pkt departed from servers
