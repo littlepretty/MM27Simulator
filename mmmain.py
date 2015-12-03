@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-from mmrng import MMGenerate
+from mmrng import generate_exp
 from mmsystem import MMSystem
 from mmreporter import MMReporter
 from mmsimulator import MMSimulator
 from mmwelch import MMWelch
-
+from mmconfidence import get_confidence_level
 import time, math
 import numpy as np
 
@@ -22,7 +22,7 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
     mm27 = MMSystem(num_srv, num_buffer)
 
     # arrival interval
-    ats = MMGenerate(num_pkts, 1.0 / l, seed)
+    ats = generate_exp(num_pkts, 1.0 / l, seed)
     # arrival time stamp
     ats = np.cumsum(ats)
     # insert init pkt events
@@ -30,8 +30,8 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
     ats = np.insert(ats, 0, init_ats)
 
     # departure time stamp
-    dts_server1 = MMGenerate(num_pkts + num_pkt_init, u, seed + 1)
-    dts_server2 = MMGenerate(num_pkts + num_pkt_init, u, seed + 2)
+    dts_server1 = generate_exp(num_pkts + num_pkt_init, u, seed + 1)
+    dts_server2 = generate_exp(num_pkts + num_pkt_init, u, seed + 2)
 
     simulator = MMSimulator(mm27, end_time)
     simulator.init_simulation(num_pkt_init)
@@ -67,7 +67,7 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
 
 def eliminate_warmup_period(l, u, num_pkt_init, seed):
     num_obsrv = 999999
-    num_trials = 5000
+    num_trials = 50
     num_pkts = 1000
     obsrv_int = min(0.01, 1.0 / l / 10)
     blocking_list = []
@@ -105,6 +105,7 @@ def main():
     run_system(lambdaA, u, 7)
     run_system(lambdaB, u, 0)
     run_system(lambdaB, u, 4)
+    get_confidence_level()
 
 if __name__ == '__main__':
     num_srv = 2

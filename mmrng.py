@@ -1,12 +1,12 @@
 __author__ = 'Ping'
 import numpy as np
 
-def MMGenerate(length, mu, seed):
+def generate_exp(length, mu, seed):
     """Generate exponential random sequence with seed"""
     randgen = np.random.RandomState(seed)
     return randgen.exponential(scale=mu, size=length)
 
-def MMGenerateSingle(mu, seed):
+def generate_exp_single(mu, seed):
     """Generate one exponential random value with seed"""
     randgen = np.random.RandomState(seed)
     random_values = randgen.exponential(scale=mu, size=1)

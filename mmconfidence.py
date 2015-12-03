@@ -1,6 +1,6 @@
 import numpy as np
 
-if __name__ == "__main__":
+def get_confidence_level():
 
     Z = 1.645
     # Need to run the other 2 tonight, then put them in this list
