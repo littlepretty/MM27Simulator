@@ -2,6 +2,7 @@
 
 % amssymb package contains more mathematical symbols
 \usepackage{amssymb,amsthm}
+\usepackage{amsmath}
 
 % graphicx package enables you to paste in graphics
 \usepackage{graphicx}
@@ -49,7 +50,7 @@
 %
 %        Preamble material specific to your essay
 %
-\title{Simulation of M/M/2/2+5 Queueing System}
+\title{Simulating M/M/2/2+5 Queueing System}
 \author{Jiaqi Yan, Ping Liu\\
 CS555 Project\\
 supervised by
@@ -224,8 +225,8 @@ We generated two sequences of 1000000 numbers each and use \textbf{t-test} to te
 
 
 \section{Eliminate Warm-up Period}
-Using Algorithm \ref{alg:simulator} as core, we run 5000 simulations for system A and system B under different initial states respectively.
-For each simulation run, we inject 1000 packets into the system; the simulation terminates when these 1000 packets are all handled.
+Using Algorithm \ref{alg:simulator} as core, we run \textbf{5000 simulations} for system A and system B under different initial states respectively.
+For each simulation run, we \textbf{inject 1000 packets} into the system; the simulation terminates when these 1000 packets are all handled.
 We choose to observe number of packets in the system during simulation.
 Every time this system variable changes, we record its value and the happenning time moment.
 After simulation, we process this log as follows.
@@ -235,11 +236,12 @@ For example, for system B where $\lambda=10$, the observation interval is 0.01.
 Then based on the simulation log, we calculate the value of number of packet at every observation time point.
 In this way we get the output for one simulation run.
 
-We process all simulation logs and then can obtain 5000 simulation outputs.
+We process all 5000 simulation logs and then can obtain 5000 simulation outputs.
 Since simulation ends at different time, we only keep $m$ observations where $m = MIN$(length of all outputs).
 Based on Welch graphical procedure, we average 5000 simulation outputs, observation by observation.
 There are totally 4 cases to investigate: system A with 0 initial packets, system A with 7 initial packets, system B with 0 initial packets, system B with 4 initial packets.
 All systems' Welch processing results are plotted in Figure \ref{fig:systemAinit0all}, Figure \ref{fig:systemAinit7all}, Figure \ref{fig:systemBinit0all} and Figure \ref{fig:systemBinit4all} respectively.
+Since the nonstationary states only take up a very smal fraction of the entire output, we further zoom out the them in Figure \ref{fig:systemAinit0warmup}, Figure \ref{fig:systemAinit7warmup}, Figure \ref{fig:systemBinit0warmup} and Figure \ref{fig:systemBinit4warmup}.
 
 \begin{figure*}
 \centering
@@ -267,9 +269,9 @@ All systems' Welch processing results are plotted in Figure \ref{fig:systemAinit
 \caption{\textbf{Average 5000 Simulation Runs}}
 \end{figure*}
 
-Since the nonstationary states only take up a very smal fraction of the entire output, we further zoom out the them in Figure \ref{fig:systemAinit0warmup}, Figure \ref{fig:systemAinit7warmup}, Figure \ref{fig:systemBinit0warmup} and Figure \ref{fig:systemBinit4warmup}.
-
-
+As we can see from both the figures for entire simulation output and the figures for only nonstationary output, system A as well as system B will enter their respective stable state \textbf{regardless of the inital state}.
+For system A, no matter we started from full buffer or empty buffer with empty server, the number of packet in the stable state is around \textbf{3.75}.
+For system B, the number of packet in system will increase from different initial states and end up with close to a value of \textbf{6.75}.
 
 \begin{figure*}
 \centering
@@ -301,15 +303,32 @@ Since the nonstationary states only take up a very smal fraction of the entire o
 
 
 \section{System Properties at Stationary State}
+In the last section, we have applied Welch graphical procedure and show the average simulation results of 5000 runs for each system with different initial state.
+These figures clearly identifies the nonstationary and stationary states.
+For system A, the time threshold for stable state is around 45 second in real time.
+For system B, the time threshold for stable state is somewhere before 10 second.
+However, we can pick a much larger time threshold when analysis system properies at the stationary state.
+In the following statistic analysis, we treat the \textbf{first one third} of the outputs as warmup peroid and just ignore them when calculating system properties.
+
+For every simulation run, we first eliminate the data outputs belonging to warmup peroid, then we can calculate:
 
 \subsection{Blocking Probability}
-
+\begin{align}
+        \label{equ:blockprob}
+        P_b = \frac{\textit{\#pkt dropped}}{\textit{\#pkt arrived}}
+\end{align}
 
 \subsection{Mean Spending Time}
-
+\begin{align}
+        \label{equ:meanspendingtime}
+        \bar{T} = \frac{\sum_{i=1}^{n}T_i}{n}
+\end{align}
 
 \subsection{Mean Number of Packet}
-
+\begin{align}
+        \label{equ:meannumpkt}
+        \bar{N} = \sum_{i=1}^{n}\frac{iT_i}{T}
+\end{align}
 
 
 
