@@ -92,8 +92,8 @@ def eliminate_warmup_period(l, u, num_pkt_init, seed):
     # welch = MMWelch(num_trials, obsrv_int, num_obsrv, prefix)
     # welch.average_all_runs()
     # Draw figure in offline mode
-    # # warmup = 8 if l == lambdaA else 32
-    # # welch = MMWelch(num_trials, obsrv_int, num_obsrv, prefix, 'offline', warmup)
+    # warmup = 1 if l == lambdaA else 32
+    # welch = MMWelch(num_trials, obsrv_int, num_obsrv, prefix, 'offline', warmup)
     # welch.plot_avg_run()
 
 def run_system(l, u, num_pkt_init):
