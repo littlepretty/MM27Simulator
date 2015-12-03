@@ -4,7 +4,7 @@ if __name__ == "__main__":
 
     Z = 1.645
     # Need to run the other 2 tonight, then put them in this list
-    prefix_list = ["Lmda2Init7", "Lmda2Init0"]
+    prefix_list = ["Lmda2Init7", "Lmda2Init0", "Lmda10Init4", "Lmda10Init0"]
 
     for prefix in prefix_list:
         #prefix = "Lmda2Init7"
