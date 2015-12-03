@@ -1,6 +1,13 @@
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Linux)
+	OPEN := xdg-open
+endif
+ifeq ($(UNAME_S), Darwin)
+	OPEN := open
+endif
 
 view: project_report
-	open project_report.pdf
+	$(OPEN) project_report.pdf
 
 project_report: project_report.tex
 	pdflatex --enable-write18 project_report.tex

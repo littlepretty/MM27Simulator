@@ -6,7 +6,7 @@ import math
 
 class MMWelch(object):
     """Welch graphic method to eliminate warm-up period"""
-    def __init__(self, num_replicas, interval, run_length, prefix, mode='online'):
+    def __init__(self, num_replicas, interval, run_length, prefix, mode='online', warmup=1):
         """Create object with
 
         Attributes:
@@ -19,6 +19,7 @@ class MMWelch(object):
         self.num_replicas = float(num_replicas)
         self.prefix = prefix
         self.mode = mode
+        self.warmup = float(warmup)
         self.interval = float(interval)
         
         if self.mode == 'online':
@@ -28,7 +29,7 @@ class MMWelch(object):
         if self.mode == 'offline':
             load_file_name = self.prefix + 'Avg%d.txt' % self.num_replicas
             self.avg_run = np.loadtxt(load_file_name)
-            warmup_period = len(self.avg_run) / 8
+            warmup_period = len(self.avg_run) / self.warmup
             self.avg_run = self.avg_run[:warmup_period]
             self.run_length = len(self.avg_run)
             self.time_seq = [self.interval * i for i in range(0, self.run_length)]
