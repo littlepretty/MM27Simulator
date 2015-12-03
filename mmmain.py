@@ -15,8 +15,7 @@ def roundup_hundreds(num):
 
 def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefix):
     """Reuse this function to get many replicas of simulation"""
-    # ending time is dependent with arriving rate.
-    print trial
+    # ending time is dependent with arriving rate. 
     end_time = 1000
 
     mm27 = MMSystem(num_srv, num_buffer)
@@ -67,7 +66,7 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
 
 def eliminate_warmup_period(l, u, num_pkt_init, seed):
     num_obsrv = 999999
-    num_trials = 50
+    num_trials = 5000
     num_pkts = 1000
     obsrv_int = min(0.01, 1.0 / l / 10)
     blocking_list = []
