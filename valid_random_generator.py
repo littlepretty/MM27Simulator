@@ -75,9 +75,23 @@ def rg_diff():
     A, B = stats.mstats.ttest_ind(listA, listB)
     print "The p-value is %s, the t-statistics is %s" % (B, A)
 
+    overall = np.append(listA,listB)
+
+    # Using set operation to differentiate 2 different lists
+    # We know that for set, every element is identical.
+    # So we can find the length of the set after we combine 2 lists.
+    # Method 1
+    temp3 = tuple(set(listA) - set(listB))
+    print len(temp3)
+    # Method 2
+    set_overall = set(overall)
+    print len(set_overall)
+
+
+
 
 if __name__ == "__main__":
-    rg_histogram()
-    rg_fitness()
-    rg_seed()
+    # rg_histogram()
+    # rg_fitness()
+    # rg_seed()
     rg_diff()
