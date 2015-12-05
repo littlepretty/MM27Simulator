@@ -198,7 +198,12 @@ From both figures we can say that the random generator generated random values o
 
 To generate different random value sequences, we feed the random generator a seed, which is the integral value of system current time.
 That is the number of seconds since \textbf{Unix Epoch}.
-We generated two sequences of 1000000 numbers each and use \textbf{t-test} to test statistically are they significantly different from each other.
+
+To demonstrate that different seed indeed generates different random value sequences, we generated two sequences of 1000000 numbers with 2 distinct seed.
+Then we combine them into a \textbf{set} object, which only hold distinct elements in Python.
+The number of different random values in 2 random sequence, of course, is the length of the set.
+Experiment result shows that the set's size is 2000000.
+This tell us that two random sequences are different.
 
 
 \section{Eliminate Warm-up Period}
