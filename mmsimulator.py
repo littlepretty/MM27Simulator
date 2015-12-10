@@ -61,9 +61,11 @@ class MMSimulator(object):
 
     def should_continue(self, N):
         """Test if seen all pkt and clock NOT exceed predefined end time"""
-        return self.system.pkt_served + self.system.pkt_dropped < N and self.clock < self.end_time
+        return self.system.pkt_served + self.system.pkt_dropped < N \
+            and self.clock < self.end_time
 
-    def simulate_core(self, arrive_time_seq, depart_time_seq_server1, depart_time_seq_server2):
+    def simulate_core(self, arrive_time_seq, depart_time_seq_server1, \
+                      depart_time_seq_server2):
         """Discrete event simulation"""
         if not self.initialized:
             print "Simulator is not explicitly initialized"
@@ -123,10 +125,12 @@ class MMSimulator(object):
                         # mark this server as 'busy'
                         new_depart_srv = self.system.available_server()
                         if new_depart_srv == 0:
-                            new_depart_ts = self.clock + depart_time_seq_server1[flag_server1]
+                            new_depart_ts = self.clock + \
+                                depart_time_seq_server1[flag_server1]
                             flag_server1 += 1
                         else:
-                            new_depart_ts = self.clock + depart_time_seq_server2[flag_server2]
+                            new_depart_ts = self.clock + \
+                                depart_time_seq_server2[flag_server2]
                             flag_server2 += 1
 
                         self.system.srv_status[new_depart_srv] = 'busy'
@@ -134,10 +138,12 @@ class MMSimulator(object):
                         # find the server pkt should go
                         earliest_ts, earliest_srv = self.schedule_departure()
                         if earliest_srv == 0:
-                            new_depart_ts = earliest_ts + depart_time_seq_server1[flag_server1]
+                            new_depart_ts = earliest_ts + \
+                                depart_time_seq_server1[flag_server1]
                             flag_server1 += 1
                         else:
-                            new_depart_ts = earliest_ts + depart_time_seq_server2[flag_server2]
+                            new_depart_ts = earliest_ts + \
+                                depart_time_seq_server2[flag_server2]
                             flag_server2 += 1
 
                         new_depart_srv = earliest_srv

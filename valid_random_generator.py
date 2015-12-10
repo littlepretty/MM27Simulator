@@ -14,7 +14,8 @@ def rg_fitness():
     ax = fig.add_subplot(111)
 
     # the histogram of the data
-    n, bins, patches = ax.hist(x, 50, normed=1, facecolor='green', alpha=0.75, label="Normalized Histogram")
+    n, bins, patches = ax.hist(x, 50, normed=1, facecolor='green', \
+                               alpha=0.75, label="Normalized Histogram")
 
     # hist uses np.histogram under the hood to create 'n' and 'bins'.
     # np.histogram returns the bin edges, so there will be 50 probability
@@ -46,7 +47,8 @@ def rg_histogram():
     print "Plot the histogram of generated random numbers"
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    n, bins, patches = ax.hist(list_random, bins=100, normed=1, facecolor='green', alpha=0.75, label='Normalized Histogram')
+    n, bins, patches = ax.hist(list_random, bins=100, normed=1, facecolor='green', \
+                               alpha=0.75, label='Normalized Histogram')
     fit = [1 for x in bins]
     ax.plot(bins, fit, 'r--', linewidth=1, label='PDF of Uniform Distribution')
     ax.set_xlabel("Generated Random Value")
@@ -87,11 +89,8 @@ def rg_diff():
     set_overall = set(overall)
     print len(set_overall)
 
-
-
-
 if __name__ == "__main__":
-    # rg_histogram()
-    # rg_fitness()
-    # rg_seed()
+    rg_histogram()
+    rg_fitness()
+    rg_seed()
     rg_diff()

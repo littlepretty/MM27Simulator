@@ -15,7 +15,7 @@ def roundup_hundreds(num):
 
 def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefix):
     """Reuse this function to get many replicas of simulation"""
-    # ending time is dependent with arriving rate. 
+    # ending time is dependent with arriving rate.
     end_time = 1000
 
     mm27 = MMSystem(num_srv, num_buffer)
@@ -57,10 +57,12 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
     optional_output += "#Running time of NO.%d trial %.4fs\n" % (trial, duration)
     optional_output += "#Ending event time stamp %.4f\n" % end_time
     optional_output += "#Blocking probability %.4f\n" % reporter.blocking_prob()
-    optional_output += "#Mean time spent in system %.4f\n" % reporter.mean_time_spending_in_system()
-    optional_output += "#Mean #pkt in system %.4f\n" % reporter.mean_num_pkt_in_system()
+    optional_output += "#Mean time spent in system %.4f\n" \
+        % reporter.mean_time_spending_in_system()
+    optional_output += "#Mean #pkt in system %.4f\n" \
+        % reporter.mean_num_pkt_in_system()
     optional_output += "########################################################\n"
-    #np.savetxt(file_name, observations, fmt='%i', header=optional_output, comments='#')
+
     # for main to get min common simulation length
     return len(observations),reporter.blocking_prob(), reporter.mean_time_spending_in_system(), reporter.mean_num_pkt_in_system()
 
@@ -74,7 +76,9 @@ def eliminate_warmup_period(l, u, num_pkt_init, seed):
     num_customers_list = []
     prefix = 'Lmda%dInit%d' % (l, num_pkt_init)
     for i in range(num_trials):
-        new_obsrv, blocking, spending, num_customers = simulator_driver(i, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefix)
+        new_obsrv, blocking, spending, num_customers = \
+            simulator_driver(i, l, u, num_pkt_init, \
+                             num_pkts, obsrv_int, seed, prefix)
         num_obsrv = min(num_obsrv, new_obsrv)
         blocking_list.append(blocking)
         spending_list.append(spending)
@@ -114,3 +118,4 @@ if __name__ == '__main__':
     u = 1.0
 
     main()
+

@@ -12,7 +12,7 @@ def get_confidence_level():
         file_blocking = prefix + "_blocking.txt"
         file_spending = prefix + "_spending.txt"
         file_num_customers = prefix + "_num_customers.txt"
-    
+
         output.write('#####################################################\n')
         output.write('######### System configuration %s #########\n' % prefix)
         output.write('#####################################################\n')
@@ -24,7 +24,8 @@ def get_confidence_level():
         # This is sample variance for estimator
         var_blocking = np.var(blocking) * length_blocking / (length_blocking-1)
         error_blocking = Z * np.sqrt(var_blocking/len(blocking))
-        output.write('Mean blocking probability:    %.6f +- %.6f\n' % (mean_blocking, error_blocking))
+        output.write('Mean blocking probability:    %.6f +- %.6f\n' \
+                     % (mean_blocking, error_blocking))
 
         #Mean Spending time
         spending = np.loadtxt(open(file_spending, 'rb'))
@@ -33,14 +34,16 @@ def get_confidence_level():
         # This is sample variance for estimator
         var_spending = np.var(spending) * length_spending / (length_spending-1)
         error_spending = Z * np.sqrt(var_spending/len(spending))
-        output.write('Mean spending time in system: %.6f +- %.6f\n' % (mean_spending, error_spending))
+        output.write('Mean spending time in system: %.6f +- %.6f\n' \
+                     % (mean_spending, error_spending))
 
         #mean number of customers
         num_customers = np.loadtxt(open(file_num_customers, 'rb'))
         length_num_customers = len(num_customers)
         mean_num_customers = np.mean(num_customers)
         # This is sample variance for estimator
-        var_num_customers = np.var(num_customers) * length_num_customers / (length_num_customers-1)
+        var_num_customers = np.var(num_customers) * length_num_customers \
+            / (length_num_customers-1)
         error_num_customers = Z * np.sqrt(var_num_customers/len(num_customers))
         output.write('Mean # of packets in system:  %.6f +- %.6f\n' % (mean_num_customers, error_num_customers))
         output.write('#####################################################\n')

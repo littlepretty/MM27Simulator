@@ -1,4 +1,5 @@
-__author__ = 'Ping'
+#!/usr/bin/python
+
 import numpy as np
 
 def generate_exp(length, mu, seed):

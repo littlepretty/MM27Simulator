@@ -6,7 +6,8 @@ import math
 
 class MMWelch(object):
     """Welch graphic method to eliminate warm-up period"""
-    def __init__(self, num_replicas, interval, run_length, prefix, mode='online', warmup=1):
+    def __init__(self, num_replicas, interval, run_length, prefix, \
+                 mode='online', warmup=1):
         """Create object with
 
         Attributes:
