@@ -21,7 +21,7 @@ class MMWelch(object):
         self.mode = mode
         self.warmup = float(warmup)
         self.interval = float(interval)
-        
+
         if self.mode == 'online':
             self.run_length = run_length
             self.time_seq = [self.interval * i for i in range(0, self.run_length)]
@@ -51,7 +51,7 @@ class MMWelch(object):
 
     def plot_avg_run(self):
         """Draw a figure, output to file"""
-        #y_max = math.ceil(max(self.avg_run)) + 0.5 
+        #y_max = math.ceil(max(self.avg_run)) + 0.5
         y_max = 7.5 # empiriall value
         x_max = math.ceil(self.time_seq[-1] / 10) * 10
 
