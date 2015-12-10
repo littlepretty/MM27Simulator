@@ -8,6 +8,7 @@ class MMSystem(object):
         capacity: queue size of the system, excluding buffer on server
         pkt_seen: number of packets arrived so far
         pkt_dropped: number of packets dropped so far
+        pkt_dropped_id(list): who is dropped by system?
         pkt_waiting: number of packets in the system queue
         pkt_served: number of packets exited
         spending_time: how much each packet is spending in the system
@@ -23,11 +24,11 @@ class MMSystem(object):
         self.capacity = capacity
 
         # couters
-        self.pkt_dropped = 0    # dropped due to buffer full
+        self.pkt_dropped = 0
         self.pkt_dropped_id = []
-        self.pkt_seen = 0       # total arrived pkt
-        self.pkt_waiting = 0    # pkt in buffer
-        self.pkt_served = 0     # pkt departed from servers
+        self.pkt_seen = 0
+        self.pkt_waiting = 0
+        self.pkt_served = 0
 
         # result log info
         self.spending_time = {}

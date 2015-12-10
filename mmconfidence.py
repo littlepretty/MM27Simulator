@@ -45,7 +45,8 @@ def get_confidence_level():
         var_num_customers = np.var(num_customers) * length_num_customers \
             / (length_num_customers-1)
         error_num_customers = Z * np.sqrt(var_num_customers/len(num_customers))
-        output.write('Mean # of packets in system:  %.6f +- %.6f\n' % (mean_num_customers, error_num_customers))
+        output.write('Mean # of packets in system:  %.6f +- %.6f\n' \
+                     % (mean_num_customers, error_num_customers))
         output.write('#####################################################\n')
         output.write('\n')
 

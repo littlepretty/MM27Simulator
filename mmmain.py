@@ -64,7 +64,8 @@ def simulator_driver(trial, l, u, num_pkt_init, num_pkts, obsrv_int, seed, prefi
     optional_output += "########################################################\n"
 
     # for main to get min common simulation length
-    return len(observations),reporter.blocking_prob(), reporter.mean_time_spending_in_system(), reporter.mean_num_pkt_in_system()
+    return len(observations),reporter.blocking_prob(), \
+        reporter.mean_time_spending_in_system(), reporter.mean_num_pkt_in_system()
 
 def eliminate_warmup_period(l, u, num_pkt_init, seed):
     num_obsrv = 999999
