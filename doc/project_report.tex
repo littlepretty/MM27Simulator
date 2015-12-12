@@ -16,6 +16,9 @@
 % page geometry
 \usepackage{geometry}
 
+\usepackage{array}
+
+
 % ALGORITHM
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -364,6 +367,26 @@ $N_s$ & 3.73037$\pm$0.01285 & 3.73350$\pm$0.01309 & 6.73854$\pm$0.00211 & 6.7404
 \hline
 \end{tabular}
 \label{tab:confidence:interval}
+\end{table}
+
+To further validate our simulator, we compare the simulation result of system B under $x_{t=0}=0$ initial state to the theoretic result from Mathematica.
+We summarize the results in Table \ref{tab:err:compare}.
+As indicated by the last column, our simulation gives very closing results to theoretic values.
+The error of system stable state measurement, mean spending time in system $S_s$ and mean number of packets in system $N_s$, are less than 0.5\%.
+\begin{table}
+\centering
+\caption{\textbf{System B with $x_{t=0}=0$}}
+\begin{tabular}{cccc}
+\hline
+ & Our Simulator & Mathematica & Error \\
+\hline
+\hline
+$S_s$ & 3.359 & $\frac{1318360}{195311}\approx 3.375$ & 0.474\% \\
+\hline
+$N_s$ & 6.739 & $\frac{131836}{39061}\approx 6.750$ & 0.163\% \\
+\hline
+\end{tabular}
+\label{tab:err:compare}
 \end{table}
 
 \newgeometry{left=1cm, right=0.1cm}
